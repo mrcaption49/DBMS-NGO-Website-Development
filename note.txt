@@ -1,0 +1,571 @@
+<?php
+
+include("connection.php");
+error_reporting(0);
+
+
+echo "<p style='font-family:Tw Cen MT; font-size:30px; color:rgba(0,0,0,0.8);'>Welcome Admin</p>";
+$results = mysqli_query($conn,"SELECT * FROM ACT_REC");
+$edit_state = false;
+
+if(isset($_GET['edit'])){
+	$id = $_GET['edit'];
+	$edit_state = true;
+	$rec = mysqli_query($conn,"SELECT * FROM ACT_REC WHERE id=$id");
+	$record = mysqli_fetch_array($rec);
+	$name = $record['name'];
+	$detail = $record['details'];
+	$id = $record['id'];
+	
+
+	
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Overpass:300,400,400i,600,700" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+
+    <link rel="stylesheet" href="css/aos.css">
+
+    <link rel="stylesheet" href="css/ionicons.min.css">
+
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="css/jquery.timepicker.css">
+
+    
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+[class*="col-"] {
+  float: left;
+  padding: 15px;
+}
+
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 20%;height:80%;
+  background-color: #33b5e5;
+  color: #ffffff;}
+.col-4 {width: 30%;float: right; padding: 18px;
+  height:60%;
+  background-color: #33b5e5;
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);}
+.col-5 {width: 30%;
+  height:35%;
+  }
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 70%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+html {
+  font-family: "Lucida Sans", sans-serif;
+}
+
+.header {
+  background-color: #666;
+  color: #ffffff;
+  padding: 15px;
+  
+}
+
+table{
+	width: 90%;
+	margin: 29px auto;
+	border-collapse: collapse;
+	text-align: left;
+}
+tr{
+	border-bottom: 1px solid #cbcbcb;
+}
+th,td{
+	border: 1px solid #dddddd;
+	height: 29px;
+	padding: 15px;
+  
+  background-color: #33b5e5;
+}
+tr:hover{
+	background: #F5F5F5;
+}
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+
+.footer {
+   padding: 18px;
+   background-color: #666;
+   color: white;
+   text-align: center;
+   font-family: Agency FB;
+}
+tablea, th1 {
+  border: 1px;
+  border-collapse: collapse;
+}
+
+.menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu li {
+  padding: 15px;
+  
+  background-color: #33b5e5;
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.menu li:hover {
+  background-color: #0099cc;
+}
+
+.menu li.active {
+  background-color: #0099cc;
+  color: white;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+<p style="color:#ffffff; font-family:Trebuchet MS; font-size:30px"><span align="left">Activity Records.</span></p>
+</div>
+
+
+
+
+<div class="row">
+  <div class="col-3 menu">
+    <ul>
+      <li><a href="http://localhost/ngo/act_rec.php" style="text-decoration:none; color:#ffffff">Activity Record</li>
+      <li><a href="http://localhost/ngo/vol_rec.php" style="text-decoration:none; color:#ffffff">Volunteer Record</li>
+      <li><a href="http://localhost/ngo/spon_rec.php" style="text-decoration:none; color:#ffffff">Sponsered Record</li>
+      
+	  <li><a href="http://localhost/ngo/valid.php" style="text-decoration:none; color:#ffffff">Volunteer Validation</li>
+	  <li class="active"><a href="#" style="text-decoration:none; color:#ffffff">Create Activity</li>
+	  <li><a style="text-decoration:none; color:#ffffff" href="logout page.php"> Log Out</li>
+    </ul>
+  </div>
+
+		  
+
+
+  <div class="col-9">
+    <h1>Activiy</h1>
+    <table>
+	<thead>
+	 <tr>
+	  <th>Activity Name</th>
+	  <th>Activity Details</th>
+	  <th colspan="2">Action</th>
+	 </tr>
+	</thead>
+	<tbody>
+	<?php while ($row = mysqli_fetch_array($results)){ ?>
+	 <tr>
+	  <td><?php echo $row['name']; ?></td>
+	  <td><?php echo $row['details']; ?></td>
+	  <td>
+	   <a href="act_rec.php?edit=<?php echo $row['id']; ?>">edit</a>
+	  </td>
+	  <td>
+	   <a href="act_rec.php?del=<?php echo $row['id']; ?>">delete</a>
+	  </td>
+	 </tr>
+	<?php } ?>
+	</tbody>
+	</table>
+	
+	<form method="post" action="">
+	<input type="hidden" name="id" value="<?php echo $id; ?>">
+		<div>
+			<label>Enter Activity</label>
+			<input type="text" name="name" value="<?php echo $name; ?>">
+		</div>
+		<br>
+		<div>
+			<label>Details</label>
+			<input type="text" name="detail" value="<?php echo $detail; ?>">
+		</div>
+		<br>
+		<div>
+		<?php if($edit_state == false): ?>
+		<button type="submit" name="save">Add</button>
+		<?php else: ?>
+		<button type="submit" name="update">Update</button>
+		<?php endif ?>
+			
+		</div>
+	</form>
+	
+	
+  </div>
+
+
+ 		  
+
+
+  <div class="col-4 menu">
+    <ul> Notice :
+	<marquee direction = "up" scrolldelay = "200">
+      <li>activity news</li>
+	  <br>
+      <li>achievements news</li>
+	  <br>
+      <li>Feedback news</li>
+	 </marquee>
+    </ul>
+	<br>
+	<br>
+	<ul>
+      <li>.</li>
+      <li>.</li>
+      <li>.</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer class="ftco-footer ftco-section img">
+    	<div class="overlay"></div>
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-md-3">
+            <div class="ftco-footer-widget mb-4">
+              <h2 class="ftco-heading-2">About Us</h2>
+              <p>ALL BOUT CARING, ABC (or EMSL in Nasikn) is the single and largest Nasik organization uniting public benefit nonprofit organizations.</p>
+              <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+              </ul>
+            </div>
+          </div>
+          &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+          <div class="col-md-2">
+             <div class="ftco-footer-widget mb-4 ml-md-4">
+              <h2 class="ftco-heading-2">Site Links</h2>
+              <ul class="list-unstyled">
+                <li><a href="home1.html" class="py-2 d-block">Home</a></li>
+				<li><a href="services1.html" class="py-2 d-block">Services</a></li>
+                <li><a href="#" class="py-2 d-block">Achievements</a></li>
+                <li><a href="#" class="py-2 d-block">Gallery</a></li>
+                <li><a href="#" class="py-2 d-block">Help</a></li>
+                <li><a href="#" class="py-2 d-block">Log In</a></li>
+                
+              </ul>
+            </div>
+          </div>
+		  
+		  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+		  
+          <div class="col-md-3">
+            <div class="ftco-footer-widget mb-4">
+            	<h2 class="ftco-heading-2">Contact US</h2>
+            	<div class="block-23 mb-3">
+	              <ul>
+	                <li><span class="icon icon-map-marker"></span><span class="text">422011. Amruthdhaam, Nasik.</span></li>
+	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+91 9123456789</span></a></li>
+	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">suuport@allboutcaring.com</span></a></li>
+	              </ul>
+	            </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </footer>
+	
+	
+	<!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.easing.1.3.js"></script>
+  <script src="js/jquery.waypoints.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/jquery.animateNumber.min.js"></script>
+  <script src="js/bootstrap-datepicker.js"></script>
+  <script src="js/jquery.timepicker.min.js"></script>
+  <script src="js/scrollax.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="js/google-map.js"></script>
+  <script src="js/main.js"></script>
+	
+
+</body>
+</html>
+
+
+<?php
+$name = "";
+$detail = "";
+$id = 0;
+
+if(isset($_POST['save']))
+{
+$name = $_POST['name'];
+$detail = $_POST['details'];
+
+if($name!="" && $detail!="")
+{
+$query = "INSERT INTO ACT_REC VALUES (NULL, '$name', '$detail')";
+mysqli_query($conn,$query);
+header('location: act_rec.php');
+}
+else
+{
+	echo "enter something";
+}
+}
+
+
+if(isset($_POST['update'])){
+$name = mysqli_real_escape_string($_POST['name']);
+$detail = mysqli_real_escape_string($_POST['details']);
+$id = mysqli_real_escape_string($_POST['id']);
+
+mysqli_query($conn, "UPDATE ACT_REC SET name='$name', detail='$detail' WHERE id=$id");
+header('location: act_rec.php');
+
+}
+
+if(isset($_GET['del'])){
+	$id = $_GET['del'];	
+	mysqli_query($conn,"DELETE FROM ACT_REC WHERE id=$id");
+	header('location: act_rec.php');
+}
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+include("connection.php");
+error_reporting(0);
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+
+
+input[type=text], input[type=password] {
+  width: 30%;
+   margin: 15px 0;
+ border: 3px solid #ccc;
+  font-family: "Arial";
+}
+
+button {
+text-align: center;
+  background-color: #666;
+  color: #ffffff;
+  padding: 7px 20px;
+  margin: 10px 0;
+  border: none;
+  cursor: pointer;
+  width: 20%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.container {
+ text-align: center;
+  padding: 20px;
+}
+
+
+table, th {
+  border-collapse: collapse;
+}
+
+
+
+
+</style>
+</head>
+
+<body>
+
+
+  <table class="table">
+  <tr>
+    <th class="th" align="center" height="500" width="600" style="font-family:Tw Cen MT; font-size:45px;">ALL BOUT CARING<p style="font-family:Segoe Script; font-size:28px;">We.Believe.</p></th>
+
+<th class="th"  height="500" width="200" > <br><br><br><img src="line.jpg"  style="width:11px;height:280px;"  ></th>
+
+    <th class="th" align="right"  height="500"width="500">
+<br>
+<h2 align="center" style="font-family:Tw Cen MT; font-size:35px;" >Volunteer Login</h2>
+
+ <div class="container">
+ <form method="post" action="">
+    Volunteer ID : <input type="text" name="volunteer_id" placeholder="Enter ID"><br><br>
+	Password : <input type="password" name="password" placeholder="Enter Password"><br><br>
+    Select user type :<select name="usertype">
+						<option value="admin">Admin</option>
+						<option value="user">Volunteer</option>
+					  </select>
+					  <br><br>
+    <input type="submit" value="Log in" style="font-family:Trebuchet MS;font-size:18px;">
+</form>
+<br><br>
+<span style="font-family:Trebuchet MS;">Not registered?<a href="C:\Users\PRANAV BAKARE\Desktop\final front end\sign up.html">Sign Up</a></span>
+  </div>
+</th>
+  </tr>
+  
+</table>
+
+<?php
+if(isset($_POST['Log in'])){
+$vol_id = $_POST['volunteer_id'];
+$pswd = $_POST['password'];
+$u_typ = $_POST['usertype'];
+}
+$query = "SELECT * FROM `user_role` WHERE volunteer_id='".$vol_id."' and password ='".$pswd."' and usertype= '".$u_typ."'";
+
+$result = mysqli_query($conn,$query);
+if($result)
+{
+	while($row=mysqli_fetch_array($result)){
+		echo('<script type="text/javascript">alert("you are loged in succesfully and you are loged in as '.$row['usertype'].'")</script>'
+}}
+if(mysqli_num_rows($result)>0){
+?>
+<script type="text/javascript">
+window.location.href="admin.php</script>
+<?php
+}
+else{
+	?>
+	<script type="text/javascript">
+window.location.href="user.php</script>
+<?php
+}
+ </body>
+</html>
